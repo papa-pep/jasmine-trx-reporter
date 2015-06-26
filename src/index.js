@@ -27,11 +27,10 @@
 
         JasmineTrxReporter = function (outputFile, browserStr) {
             this.browser = browserStr;
-            //console.log('protractor-trx-reporter: setting output file to ' + outputFile);
             this.outputFile = browserStr + '_' + outputFile || 'Default.trx';
         };
 
-    JasmineTrxReporter.finished_at = null; // will be updated after all files have been written
+    JasmineTrxReporter.finished_at = null; 
 
     JasmineTrxReporter.prototype = {
         jasmineStarted: function(suiteInfo){
@@ -44,7 +43,7 @@
             })
             suiteName = suite.description;
         },
-        //reportSpecStarting
+
         specStarted: function (spec) {
             spec.startTime = new Date();
 
@@ -53,8 +52,6 @@
             }
         },
 
-        // here we write the result of one test run
-        //reportSpecResults
          specDone : function (spec) {
              spec.finished_at = new Date();
              var specRunTime = this.calculateRunTime(spec);
@@ -117,6 +114,5 @@
         }
     };
 
-    // export public
     jasmine.JasmineTrxReporter = JasmineTrxReporter;
 }());
