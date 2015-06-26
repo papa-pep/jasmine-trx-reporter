@@ -35,7 +35,7 @@
   "_id": "jasmine-trx-reporter@0.0.1",
   "_from": "jasmine-trx-reporter@",
   "homepage": "https://github.com/papa-pep/jasmine-trx-reporter",
-  "_shasum": "748efbacf69543c08c9a83f740dbd97aa075159e",
+  "_shasum": "db4e9b9cc88b63487ad9fb15703ce8fc6c8ed966",
   "_npmVersion": "1.4.21",
   "_npmUser": {
     "name": "papapep",
@@ -48,7 +48,7 @@
     }
   ],
   "dist": {
-    "shasum": "748efbacf69543c08c9a83f740dbd97aa075159e",
+    "shasum": "db4e9b9cc88b63487ad9fb15703ce8fc6c8ed966",
     "tarball": "http://registry.npmjs.org/jasmine-trx-reporter/-/jasmine-trx-reporter-0.1.2.tgz"
   },
   "directories": {},
