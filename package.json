@@ -1,5 +1,5 @@
 {
-  "name": "jasmine--trx-reporter",
+  "name": "jasmine-trx-reporter",
   "version": "0.0.1",
   "description": "Jasmine reporter for generating TRX files",
   "main": "./src/index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/papa-pep/pjasmine-trx-reporter.git"
+    "url": "git://github.com/papa-pep/jasmine-trx-reporter.git"
   },
   "keywords": [
     "jasmine-plugin",
