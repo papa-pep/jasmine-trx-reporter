@@ -1,0 +1,57 @@
+{
+  "name": "jasmine--trx-reporter",
+  "version": "0.0.1",
+  "description": "Jasmine reporter for generating TRX files",
+  "main": "./src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/papa-pep/pjasmine-trx-reporter.git"
+  },
+  "keywords": [
+    "jasmine-plugin",
+    "jasmine-reporter",
+    "trx"
+  ],
+  "author": {
+    "name": "Greg Pepin",
+    "email": "pepin.greg@gmail.com"
+  },
+  "devDependencies": {
+    "node-trx": "0.3.0"
+  },
+  "license": "MIT",
+  "contributors": [
+    {
+      "name": "Greg Pepin",
+      "email": "pepin.greg@gmail.com"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/papa-pep/jasmine-trx-reporter/issues"
+  },
+  "_id": "jasmine-trx-reporter@0.0.1",
+  "_from": "jasmine-trx-reporter@",
+  "gitHead": "e902d0735795c3e5339bb0e9ea718be533a2f3a6",
+  "homepage": "https://github.com/papa-pep/jasmine-trx-reporter",
+  "_shasum": "226853a168e9b441d7ededac9388403e3a3e04da",
+  "_npmVersion": "1.4.21",
+  "_npmUser": {
+    "name": "papapep",
+    "email": "pepin.greg@gmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "papapep",
+      "email": "pepin.greg@gmail.com"
+    }
+  ],
+  "dist": {
+    "shasum": "226853a168e9b441d7ededac9388403e3a3e04da",
+    "tarball": "http://registry.npmjs.org/jasmine-trx-reporter/-/jasmine-trx-reporter-0.1.2.tgz"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/jasmine-trx-reporter/-/jasmine-trx-reporter-0.1.2.tgz"
+}
