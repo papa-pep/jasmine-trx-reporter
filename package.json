@@ -19,7 +19,7 @@
     "name": "Greg Pepin",
     "email": "pepin.greg@gmail.com"
   },
-  "devDependencies": {
+  "dependencies": {
     "node-trx": "0.3.0"
   },
   "license": "MIT",
