@@ -17,3 +17,9 @@ Within the 'onPrepare' function of the protractor configuration, add the followi
  JasmineTrxReporter([outputFile], [browser]);
  
  The browser string will be added to the outputFile name for compatibility with multicapabilities.
+ 
+##### Example package.json dependencies
+       "devDependencies": {
+         "protractor": "^1.4.21",
+         "jasmine-trx-reporter": "1.0.2"
+       }
