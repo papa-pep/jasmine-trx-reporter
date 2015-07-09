@@ -59,7 +59,7 @@
              var success = spec.failedExpectations.length === 0
              var result = {
                  test: new UnitTest({
-                     name: spec.description,
+                     name: spec.description + ' - ' + this.browser,
                      methodName: spec.description,
                      methodCodeBase: 'protractor-jasmine',
                      methodClassName: suiteName,
