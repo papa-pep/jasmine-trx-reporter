@@ -20,12 +20,13 @@
                 day = currentDate.getDate();
             return (currentDate.getFullYear() + "-" + pad(month) + "-" + pad(day) + " " + pad(currentDate.getHours()) + ":" + pad(currentDate.getMinutes()) + ":" + pad(currentDate.getSeconds()));
         },
-
+        reportName = '',
         browser = '',
         userName = process.env.USERNAME,
         suiteName = '',
 
-        JasmineTrxReporter = function (outputFile, browserStr) {
+        JasmineTrxReporter = function (reportName, outputFile, browserStr) {
+            this.reportName = reportName;
             this.browser = browserStr;
             this.outputFile = browserStr + '_' + outputFile || 'Default.trx';
         };
@@ -38,7 +39,7 @@
         },
         suiteStarted: function (suite) {
             run = new TestRun({
-                name: suite.description,
+                name: this.reportName,
                 runUser: userName
             })
             suiteName = suite.description;
