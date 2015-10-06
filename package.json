@@ -1,6 +1,6 @@
 {
   "name": "jasmine-trx-reporter",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Jasmine reporter for generating TRX files",
   "main": "./src/index.js",
   "scripts": {
