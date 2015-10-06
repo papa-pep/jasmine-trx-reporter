@@ -28,7 +28,11 @@
         JasmineTrxReporter = function (reportName, outputFile, browserStr) {
             this.reportName = reportName;
             this.browser = browserStr;
-            this.outputFile = browserStr + '_' + outputFile || 'Default.trx';
+            if (outputFile) {
+                this.outputFile = browserStr + '_' + outputFile || 'Default.trx';
+            } else {
+                this.outputFile = null;
+            }
         };
 
     JasmineTrxReporter.finished_at = null; 
@@ -38,6 +42,9 @@
 
         },
         suiteStarted: function (suite) {
+            if (this.outputFile == null) {
+                this.outputFile = this.browser + '_' + suite.description + '.trx' || 'Default.trx';
+            }
             var suiteStartTime = getTimestamp(new Date());
             run = new TestRun({
                 name: this.reportName,
