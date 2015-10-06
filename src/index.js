@@ -40,14 +40,20 @@
         suiteStarted: function (suite) {
             run = new TestRun({
                 name: this.reportName,
-                runUser: userName
+                runUser: userName,
+                times: {
+                    creation: suiteStartTime,
+                    queuing: suiteStartTime,
+                    start: suiteStartTime,
+                    finish: suiteStartTime
+                }
             })
             suiteName = suite.description;
         },
 
         specStarted: function (spec) {
             spec.startTime = new Date();
-
+            run.times.start = getTimestamp(spec.startTime);
             if (!spec.startTime) {
                 spec.startTime = spec.startTime;
             }
@@ -80,7 +86,7 @@
         },
 
          suiteDone : function (result) {
-
+            run.times.finish = getTimestamp(new Date());
             console.log(run);
              fs.writeFileSync(this.outputFile, run.toXml());
         },
