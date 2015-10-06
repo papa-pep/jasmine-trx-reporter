@@ -38,6 +38,7 @@
 
         },
         suiteStarted: function (suite) {
+            var suiteStartTime = getTimestamp(new Date());
             run = new TestRun({
                 name: this.reportName,
                 runUser: userName,
@@ -47,7 +48,7 @@
                     start: suiteStartTime,
                     finish: suiteStartTime
                 }
-            })
+            });
             suiteName = suite.description;
         },
 
