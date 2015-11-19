@@ -9,7 +9,7 @@ Within the 'onPrepare' function of the protractor configuration, add the followi
      return browser.getCapabilities().then(function (caps) {
             var browserName = caps.caps_.browserName.toUpperCase();
             var browserVersion = caps.caps_.version;
-            jasmine.getEnv().addReporter(new trx('Smoke test suite', null, browserName + "_" + browserVersion));
+            jasmine.getEnv().addReporter(new trx('My favorite test suite', null, browserName + "_" + browserVersion));
         });
  
 #### The constructor for the reporter takes 2 arguments:
