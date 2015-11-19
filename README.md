@@ -6,20 +6,19 @@ A jasmine reporter that outputs the TRX file format for use with Visual Studio
 
 Within the 'onPrepare' function of the protractor configuration, add the following:
 
-     require('jasmine-trx-reporter');
-     var capsPromise = browser.getCapabilities();
-     capsPromise.then(function (caps) {
-        var browserName = caps.caps_.browserName.toUpperCase();
-        var browserVersion = caps.caps_.version;
-     jasmine.getEnv().addReporter(new jasmine.JasmineTrxReporter('Report name', 'filename override', browserName + "_" + browserVersion));
+     return browser.getCapabilities().then(function (caps) {
+            var browserName = caps.caps_.browserName.toUpperCase();
+            var browserVersion = caps.caps_.version;
+            jasmine.getEnv().addReporter(new trx('Smoke test suite', null, browserName + "_" + browserVersion));
+        });
  
 #### The constructor for the reporter takes 2 arguments:
- JasmineTrxReporter([outputFile], [browser]);
+ JasmineTrxReporter([reportName], [outputFile], [browser]);
  
- The browser string will be added to the outputFile name for compatibility with multicapabilities.
+ The browser string will be added to the outputFile name for compatibility with multicapabilities.  If no outputfile is specified it will be named according to the suite.
  
 ##### Example package.json dependencies
        "devDependencies": {
-         "protractor": "^1.4.21",
-         "jasmine-trx-reporter": "1.0.2"
+         "protractor": "3.0.0",
+         "jasmine-trx-reporter": "2.0.0"
        }
