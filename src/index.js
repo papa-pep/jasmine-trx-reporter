@@ -23,6 +23,8 @@ module.exports = function (reportName, outputFile, browserStr, groupingSuites) {
         groupingSuites = false;
     } else if (groupingSuites != true && groupingSuites != false) {
         groupingSuites = true;
+    } else {
+        groupingSuite = false;
     }
     //console.log('groupingSuites: ' + groupingSuites);
 
@@ -30,7 +32,7 @@ module.exports = function (reportName, outputFile, browserStr, groupingSuites) {
         //console.log('jasmineStarted: ' + suiteInfo.totalSpecsDefined + ' specs found');
 
         if (groupingSuites == true) {
-            this.started();
+            this.beginTestRun();
         }
     };
 
@@ -42,13 +44,13 @@ module.exports = function (reportName, outputFile, browserStr, groupingSuites) {
         }
 
         if (groupingSuites == false) {
-            this.started();
+            this.beginTestRun();
         }
 
         suiteName = suite.description;
     };
 
-    this.started = function () {
+    this.beginTestRun = function () {
         var suiteStartTime = getTimestamp(new Date());
         run = new TRX.TestRun({
             name: reportName,
@@ -103,7 +105,7 @@ module.exports = function (reportName, outputFile, browserStr, groupingSuites) {
     this.suiteDone = function (result) {
         //console.log('suiteDone: ' + result.fullName);
         if (groupingSuites == false) {
-            this.write();
+            this.writeResultFile();
             outputFile = null;
         }
     };
@@ -111,11 +113,11 @@ module.exports = function (reportName, outputFile, browserStr, groupingSuites) {
     this.jasmineDone = function () {
         //console.log('jasmineDone');
         if (groupingSuites == true) {
-            this.write();
+            this.writeResultFile();
         }
     };
 
-    this.write = function () {
+    this.writeResultFile = function () {
         //console.log('write ' + outputFile);
         run.times.finish = getTimestamp(new Date());
         fs.writeFileSync(outputFile, run.toXml());
