@@ -3,8 +3,8 @@ var TRX = require('node-trx'),
     fs = require('fs'),
     os = require('os');
 
-module.exports = function(reportName, outputFile, browserStr, groupingSuites) {
-	    //console.log('Adding TRX reporter: ' + reportName + ' - ' + outputFile + ' - ' + browserStr + ' - ' + groupingSuites);
+module.exports = function (reportName, outputFile, browserStr, groupingSuites) {
+    //console.log('Adding TRX reporter: ' + reportName + ' - ' + outputFile + ' - ' + browserStr + ' - ' + groupingSuites);
 
     var run = {},
         computerName = os.hostname(),
@@ -19,49 +19,50 @@ module.exports = function(reportName, outputFile, browserStr, groupingSuites) {
         outputFile = null;
     }
 
-    if (!groupingSuites){
-		groupingSuites = false; 
-	} else if(groupingSuites != true && groupingSuites != false){
-		groupingSuites = true;
-	}
-	//console.log('groupingSuites: ' + groupingSuites);
+    if (!groupingSuites) {
+        groupingSuites = false;
+    } else if (groupingSuites != true && groupingSuites != false) {
+        groupingSuites = true;
+    }
+    //console.log('groupingSuites: ' + groupingSuites);
 
-    this.jasmineStarted = function(suiteInfo){
+    this.jasmineStarted = function (suiteInfo) {
         //console.log('jasmineStarted: ' + suiteInfo.totalSpecsDefined + ' specs found');
-        if(groupingSuites == true){
-			this.started();
-		}
+
+        if (groupingSuites == true) {
+            this.started();
+        }
     };
 
-    this.suiteStarted = function(suite){
+    this.suiteStarted = function (suite) {
         //console.log('suiteStarted: ' + suite.fullName);
 
         if (outputFile == null) {
             outputFile = browser + '_' + suite.description + '.trx' || 'Default.trx';
         }
 
-        if(groupingSuites == false){
-			this.started();
-		}
-		
+        if (groupingSuites == false) {
+            this.started();
+        }
+
         suiteName = suite.description;
     };
-    
-    this.started = function(){
-		var suiteStartTime = getTimestamp(new Date());
-			run = new TRX.TestRun({
-				name: reportName,
-				runUser: process.env.USERNAME,
-				times: {
-					creation: suiteStartTime,
-					queuing: suiteStartTime,
-					start: suiteStartTime,
-					finish: suiteStartTime
-				}
-			});
-	}
 
-    this.specStarted = function(spec){
+    this.started = function () {
+        var suiteStartTime = getTimestamp(new Date());
+        run = new TRX.TestRun({
+            name: reportName,
+            runUser: process.env.USERNAME,
+            times: {
+                creation: suiteStartTime,
+                queuing: suiteStartTime,
+                start: suiteStartTime,
+                finish: suiteStartTime
+            }
+        });
+    }
+
+    this.specStarted = function (spec) {
         //console.log('specStarted: ' + spec.description);
 
         spec.startTime = new Date();
@@ -71,7 +72,7 @@ module.exports = function(reportName, outputFile, browserStr, groupingSuites) {
         }
     };
 
-    this.specDone = function(spec){
+    this.specDone = function (spec) {
         //console.log('specDone: ' + spec.description);
 
         spec.finished_at = new Date();
@@ -91,34 +92,34 @@ module.exports = function(reportName, outputFile, browserStr, groupingSuites) {
             startTime: getTimestamp(spec.startTime),
             endTime: getTimestamp(spec.finished_at)
         };
-        if (success === false){
+        if (success === false) {
             result.output = combineProperties(spec.failedExpectations, 'message');
-            result.errorMessage =  combineProperties(spec.failedExpectations, 'message');
+            result.errorMessage = combineProperties(spec.failedExpectations, 'message');
             result.errorStacktrace = combineProperties(spec.failedExpectations, 'stack');
         }
         run.addResult(result);
     };
 
-    this.suiteDone = function(result){
+    this.suiteDone = function (result) {
         //console.log('suiteDone: ' + result.fullName);
-        if(groupingSuites == false){
-		   this.write();
-		   outputFile = null;
-	   }
+        if (groupingSuites == false) {
+            this.write();
+            outputFile = null;
+        }
     };
 
-    this.jasmineDone = function(){
+    this.jasmineDone = function () {
         //console.log('jasmineDone');
-        if(groupingSuites == true){
-		   this.write();
-		}
+        if (groupingSuites == true) {
+            this.write();
+        }
     };
-    
-    this.write = function(){
-		//console.log('write ' + outputFile);
-		run.times.finish = getTimestamp(new Date());
-		fs.writeFileSync(outputFile, run.toXml());
-	}
+
+    this.write = function () {
+        //console.log('write ' + outputFile);
+        run.times.finish = getTimestamp(new Date());
+        fs.writeFileSync(outputFile, run.toXml());
+    }
 
     function getTimestamp(date) {
         function pad(n) { return n < 10 ? '0' + n : n; }
@@ -128,7 +129,7 @@ module.exports = function(reportName, outputFile, browserStr, groupingSuites) {
         return (currentDate.getFullYear() + "-" + pad(month) + "-" + pad(day) + " " + pad(currentDate.getHours()) + ":" + pad(currentDate.getMinutes()) + ":" + pad(currentDate.getSeconds()));
     }
 
-    function calculateRunTime(spec){
+    function calculateRunTime(spec) {
         var specRunTime = (spec.finished_at - spec.startTime) / 1000;
         specRunTime = (isNaN(specRunTime) ? 0.001 : specRunTime);
 
@@ -139,13 +140,13 @@ module.exports = function(reportName, outputFile, browserStr, groupingSuites) {
         } else {
             newDate.setUTCSeconds(splitSeconds[0]);
         }
-        var dateStr = newDate.toISOString().substr(11,12);
+        var dateStr = newDate.toISOString().substr(11, 12);
         return dateStr;
     }
 
-    function combineProperties(collection, property){
+    function combineProperties(collection, property) {
         var combined = '';
-        for(var i = 0; i < collection.length; i++) {
+        for (var i = 0; i < collection.length; i++) {
             combined = combined + ' - ' + collection[i][property];
         }
         return combined;
