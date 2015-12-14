@@ -3,8 +3,8 @@ var TRX = require('node-trx'),
     fs = require('fs'),
     os = require('os');
 
-module.exports = function(reportName, outputFile, browserStr) {
-    //console.log('Adding TRX reporter: ' + reportName + ' - ' + outputFile + ' - ' + browserStr);
+module.exports = function(reportName, outputFile, browserStr, groupingSuites) {
+	    //console.log('Adding TRX reporter: ' + reportName + ' - ' + outputFile + ' - ' + browserStr + ' - ' + groupingSuites);
 
     var run = {},
         computerName = os.hostname(),
@@ -19,8 +19,18 @@ module.exports = function(reportName, outputFile, browserStr) {
         outputFile = null;
     }
 
+    if (!groupingSuites){
+		groupingSuites = false; 
+	} else if(groupingSuites != true && groupingSuites != false){
+		groupingSuites = true;
+	}
+	//console.log('groupingSuites: ' + groupingSuites);
+
     this.jasmineStarted = function(suiteInfo){
         //console.log('jasmineStarted: ' + suiteInfo.totalSpecsDefined + ' specs found');
+        if(groupingSuites == true){
+			this.started();
+		}
     };
 
     this.suiteStarted = function(suite){
@@ -30,19 +40,26 @@ module.exports = function(reportName, outputFile, browserStr) {
             outputFile = browser + '_' + suite.description + '.trx' || 'Default.trx';
         }
 
-        var suiteStartTime = getTimestamp(new Date());
-        run = new TRX.TestRun({
-            name: reportName,
-            runUser: process.env.USERNAME,
-            times: {
-                creation: suiteStartTime,
-                queuing: suiteStartTime,
-                start: suiteStartTime,
-                finish: suiteStartTime
-            }
-        });
+        if(groupingSuites == false){
+			this.started();
+		}
+		
         suiteName = suite.description;
     };
+    
+    this.started = function(){
+		var suiteStartTime = getTimestamp(new Date());
+			run = new TRX.TestRun({
+				name: reportName,
+				runUser: process.env.USERNAME,
+				times: {
+					creation: suiteStartTime,
+					queuing: suiteStartTime,
+					start: suiteStartTime,
+					finish: suiteStartTime
+				}
+			});
+	}
 
     this.specStarted = function(spec){
         //console.log('specStarted: ' + spec.description);
@@ -84,15 +101,24 @@ module.exports = function(reportName, outputFile, browserStr) {
 
     this.suiteDone = function(result){
         //console.log('suiteDone: ' + result.fullName);
-
-        run.times.finish = getTimestamp(new Date());
-        //console.log(run);
-        fs.writeFileSync(outputFile, run.toXml());
+        if(groupingSuites == false){
+		   this.write();
+		   outputFile = null;
+	   }
     };
 
     this.jasmineDone = function(){
         //console.log('jasmineDone');
+        if(groupingSuites == true){
+		   this.write();
+		}
     };
+    
+    this.write = function(){
+		//console.log('write ' + outputFile);
+		run.times.finish = getTimestamp(new Date());
+		fs.writeFileSync(outputFile, run.toXml());
+	}
 
     function getTimestamp(date) {
         function pad(n) { return n < 10 ? '0' + n : n; }
