@@ -19,12 +19,10 @@ module.exports = function (reportName, outputFile, browserStr, groupingSuites) {
         outputFile = null;
     }
 
-    if (!groupingSuites) {
-        groupingSuites = false;
-    } else if (groupingSuites != true && groupingSuites != false) {
+    if (groupingSuites) {
         groupingSuites = true;
     } else {
-        groupingSuite = false;
+        groupingSuites = false;
     }
     //console.log('groupingSuites: ' + groupingSuites);
 
