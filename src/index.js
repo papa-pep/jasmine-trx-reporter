@@ -8,10 +8,11 @@ module.exports = function (reportName, outputFile, browserStr, groupingSuites) {
 
     var run = {},
         computerName = os.hostname(),
-        reportName = '',
         browser = browserStr,
         userName = process.env.USERNAME,
         suiteName = '';
+
+    reportName = reportName || '';
 
     if (outputFile) {
         outputFile = browserStr + '_' + outputFile || 'Default.trx';
