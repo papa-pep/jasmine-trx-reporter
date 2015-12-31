@@ -3,22 +3,18 @@ var TRX = require('node-trx'),
     fs = require('fs'),
     os = require('os');
 
-module.exports = function (reportName, outputFile, browserStr, groupingSuites) {
+module.exports = function (jasmineTrxConfig) {
     //console.log('Adding TRX reporter: ' + reportName + ' - ' + outputFile + ' - ' + browserStr + ' - ' + groupingSuites);
 
     var run = {},
         computerName = os.hostname(),
-        browser = browserStr,
+        browser = jasmineTrxConfig.browser || '',
         userName = process.env.USERNAME,
-        suiteName = '';
-
-    reportName = reportName || '';
-
-    if (outputFile) {
-        outputFile = browserStr + '_' + outputFile || 'Default.trx';
-    } else {
-        outputFile = null;
-    }
+        suiteName = '',
+        groupingSuites = jasmineTrxConfig.groupSuitesIntoSingleFile,
+        outputFolder = jasmineTrxConfig.folder || '',
+        outputFile = buildOutputFilePath(jasmineTrxConfig),
+        reportName = jasmineTrxConfig.reportName || '';
 
     if (groupingSuites) {
         groupingSuites = true;
@@ -26,6 +22,20 @@ module.exports = function (reportName, outputFile, browserStr, groupingSuites) {
         groupingSuites = false;
     }
     //console.log('groupingSuites: ' + groupingSuites);
+
+    function buildOutputFilePath(jasmineTrxConfig){
+        ensureFolderExists(outputFolder);
+        if (jasmineTrxConfig.outputFile) {
+            return buildFolderPath(outputFolder) + buildBrowserPath() + jasmineTrxConfig.outputFile || 'Default.trx';
+        } else {
+            return null;
+        }
+    }
+
+    function buildOutputFilePathBySuite(suite){
+        ensureFolderExists(outputFolder);
+        return buildFolderPath(outputFolder) + buildBrowserPath() + suite.description + '.trx' || 'Default.trx';
+    }
 
     this.jasmineStarted = function (suiteInfo) {
         //console.log('jasmineStarted: ' + suiteInfo.totalSpecsDefined + ' specs found');
@@ -39,7 +49,7 @@ module.exports = function (reportName, outputFile, browserStr, groupingSuites) {
         //console.log('suiteStarted: ' + suite.fullName);
 
         if (outputFile == null) {
-            outputFile = browser + '_' + suite.description + '.trx' || 'Default.trx';
+            outputFile = buildOutputFilePathBySuite(suite);
         }
 
         if (groupingSuites == false) {
@@ -151,5 +161,35 @@ module.exports = function (reportName, outputFile, browserStr, groupingSuites) {
             combined = combined + ' - ' + collection[i][property];
         }
         return combined;
+    }
+
+    function buildFolderPath(outputFolder){
+        if (outputFolder){
+            return outputFolder + '/';
+        } else {
+            return '';
+        }
+    }
+
+    function buildBrowserPath(){
+        if (browser){
+            return browser + '_';
+        } else {
+            return '';
+        }
+    }
+
+    function ensureFolderExists(path) {
+        if (path) {
+            fs.mkdir(path, function (err) {
+                if (err) {
+                    if (err.code == 'EEXIST') {
+                        //AOK
+                    } else {
+                        console.error('Error creating trx output folder: ' + err);
+                    }
+                }
+            });
+        }
     }
 };
