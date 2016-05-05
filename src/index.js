@@ -128,8 +128,10 @@ module.exports = function (jasmineTrxConfig) {
 
     this.writeResultFile = function () {
         //console.log('write ' + outputFile);
-        run.times.finish = getTimestamp(new Date());
-        fs.writeFileSync(outputFile, run.toXml());
+        if (outputFile) {
+            run.times.finish = getTimestamp(new Date());
+            fs.writeFileSync(outputFile, run.toXml());
+        }
     }
 
     function getTimestamp(date) {
