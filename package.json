@@ -20,7 +20,9 @@
     "email": "pepin.greg@gmail.com"
   },
   "dependencies": {
-    "node-trx": "0.4.0"
+    "node-trx": "0.7.0",
+    "node-uuid": "^1.4.7",
+    "mkdirp": "^0.5.1"
   },
   "license": "MIT",
   "contributors": [
