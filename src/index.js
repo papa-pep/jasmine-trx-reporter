@@ -1,7 +1,10 @@
 'use strict';
 var TRX = require('node-trx'),
     fs = require('fs'),
-    os = require('os');
+    os = require('os'),
+    path = require('path'),
+    uuid = require('node-uuid'), // uuid for screenshots file names. Already used by node-trx
+    mkdirp = require('mkdirp');
 
 module.exports = function (jasmineTrxConfig) {
     //console.log('Adding TRX reporter: ' + reportName + ' - ' + outputFile + ' - ' + browserStr + ' - ' + groupingSuites);
@@ -14,7 +17,12 @@ module.exports = function (jasmineTrxConfig) {
         groupingSuites = jasmineTrxConfig.groupSuitesIntoSingleFile,
         outputFolder = jasmineTrxConfig.folder || '',
         outputFile = buildOutputFilePath(jasmineTrxConfig),
-        reportName = jasmineTrxConfig.reportName || '';
+        reportName = jasmineTrxConfig.reportName || '',
+
+        takeScreenshotsOnlyOnFailures = jasmineTrxConfig.takeScreenshotsOnlyOnFailures || false,
+        takeScreenshots = jasmineTrxConfig.takeScreenshots || false,
+        outputScreenshotsFolder
+        ;
 
     if (groupingSuites) {
         groupingSuites = true;
@@ -52,6 +60,8 @@ module.exports = function (jasmineTrxConfig) {
             outputFile = buildOutputFilePathBySuite(suite);
         }
 
+        outputScreenshotsFolder = outputFile.replace('.trx', '');
+
         if (groupingSuites == false) {
             this.beginTestRun();
         }
@@ -69,6 +79,11 @@ module.exports = function (jasmineTrxConfig) {
                 queuing: suiteStartTime,
                 start: suiteStartTime,
                 finish: suiteStartTime
+            },
+            deployment: {
+                // if we want attach files with the tests results, we need to specify the folder where thoses results are.
+                // we will create a folder with the same name as the file (its what Visual Studio does by default).
+                runDeploymentRoot: path.basename(outputFile.replace('.trx', ''))
             }
         });
     }
@@ -108,8 +123,29 @@ module.exports = function (jasmineTrxConfig) {
             result.errorMessage = combineProperties(spec.failedExpectations, 'message');
             result.errorStacktrace = combineProperties(spec.failedExpectations, 'stack');
         }
+
+        // check if we should take a screenshot always or only when a spec fails
+        if ((takeScreenshotsOnlyOnFailures && !success) || takeScreenshots) {
+            attachScreenshot(result);
+        }
+
         run.addResult(result);
     };
+
+    function attachScreenshot(testResult) {
+        var screenShotName = uuid.v4();
+        testResult.executionId = testResult.executionId || uuid.v4();
+        testResult.resultFiles = [{ path: screenShotName + '.png' }];
+
+        // trx attachments for a test are expected to reside on a folder with the same name as the executionId
+        ensureFolderExists(path.join(outputScreenshotsFolder, 'In', testResult.executionId));
+
+        if(global.browser && global.browser.takeScreenshot) {
+            return global.browser.takeScreenshot().then(function(png) {
+                writeScreenshot(png, path.join(outputScreenshotsFolder, 'In', testResult.executionId, screenShotName + '.png'));
+            });
+        }
+    }
 
     this.suiteDone = function (result) {
         //console.log('suiteDone: ' + result.fullName);
@@ -183,7 +219,8 @@ module.exports = function (jasmineTrxConfig) {
 
     function ensureFolderExists(path) {
         if (path) {
-            fs.mkdir(path, function (err) {
+            // replacing with mkdirp, because it works recursively
+            mkdirp(path, function (err) {
                 if (err) {
                     if (err.code == 'EEXIST') {
                         //AOK
@@ -193,5 +230,11 @@ module.exports = function (jasmineTrxConfig) {
                 }
             });
         }
+    }
+
+    function writeScreenshot(data, filename) {
+        var stream = fs.createWriteStream(filename);
+        stream.write(new Buffer(data, 'base64'));
+        stream.end();
     }
 };
