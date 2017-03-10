@@ -3,6 +3,9 @@ A jasmine reporter that outputs the TRX file format for use with Visual Studio
 
 
 #### Example use:
+Within the config file add:
+
+```var trx = require('jasmine-trx-reporter');```
 
 Within the 'onPrepare' function of the protractor configuration, add the following:
 
