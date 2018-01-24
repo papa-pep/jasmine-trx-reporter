@@ -38,3 +38,22 @@ Within the 'onPrepare' function of the protractor configuration, add the followi
          "protractor": "3.0.0",
          "jasmine-trx-reporter": "2.0.0"
        }
+       
+       
+#### Workarounds:
+For those who may be using jest, here is an example workaround:
+````javascript
+const { TestRun } = require('node-trx');
+const chalk = require('chalk');
+const addResult = TestRun.prototype.addResult;
+TestRun.prototype.addResult = function(result) {
+  if (result.errorMessage) result.errorMessage = chalk.stripColor(result.errorMessage);
+  if (result.errorStacktrace) result.errorStacktrace = chalk.stripColor(result.errorStacktrace);
+  if (result.output) result.output = chalk.stripColor(result.output);
+  return addResult.apply(this, arguments);
+};
+const JasmineTrxReporter = require('jasmine-trx-reporter');
+jasmine.getEnv().addReporter(new JasmineTrxReporter({
+  ...
+}));
+````
