@@ -140,10 +140,8 @@ module.exports = function (jasmineTrxConfig) {
         // trx attachments for a test are expected to reside on a folder with the same name as the executionId
         ensureFolderExists(path.join(outputScreenshotsFolder, 'In', testResult.executionId));
 
-        if(global.browser && global.browser.takeScreenshot) {
-            return global.browser.takeScreenshot().then(function(png) {
-                writeScreenshot(png, path.join(outputScreenshotsFolder, 'In', testResult.executionId, screenShotName + '.png'));
-            });
+        if (global.browser && global.browser.takeScreenshot) {
+            takeScreenshot(path.join(outputScreenshotsFolder, 'In', testResult.executionId, screenShotName + '.png'));
         }
     }
 
@@ -230,6 +228,12 @@ module.exports = function (jasmineTrxConfig) {
                 }
             });
         }
+    }
+
+    function takeScreenshot(fileName) {
+        global.browser.takeScreenshot().then(function (png) {
+            writeScreenshot(png, fileName);
+        });
     }
 
     function writeScreenshot(data, filename) {
