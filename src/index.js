@@ -3,7 +3,7 @@ var TRX = require('node-trx'),
     fs = require('fs'),
     os = require('os'),
     path = require('path'),
-    uuid = require('node-uuid'), // uuid for screenshots file names. Already used by node-trx
+    uuid = require('uuid'), // uuid for screenshots file names. Already used by node-trx
     mkdirp = require('mkdirp');
 
 module.exports = function (jasmineTrxConfig) {
@@ -173,7 +173,7 @@ module.exports = function (jasmineTrxConfig) {
         var currentDate = date !== undefined ? date : new Date(),
             month = currentDate.getMonth() + 1,
             day = currentDate.getDate();
-        return (currentDate.getFullYear() + "-" + pad(month) + "-" + pad(day) + " " + pad(currentDate.getHours()) + ":" + pad(currentDate.getMinutes()) + ":" + pad(currentDate.getSeconds()));
+        return (currentDate.getFullYear() + '-' + pad(month) + '-' + pad(day) + ' ' + pad(currentDate.getHours()) + ':' + pad(currentDate.getMinutes()) + ':' + pad(currentDate.getSeconds()));
     }
 
     function calculateRunTime(spec) {
@@ -238,7 +238,7 @@ module.exports = function (jasmineTrxConfig) {
 
     function writeScreenshot(data, filename) {
         var stream = fs.createWriteStream(filename);
-        stream.write(new Buffer(data, 'base64'));
+        stream.write(Buffer.from(data, 'base64'));
         stream.end();
     }
 };
